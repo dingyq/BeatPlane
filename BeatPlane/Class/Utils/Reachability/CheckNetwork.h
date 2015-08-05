@@ -1,9 +1,9 @@
 //
 //  CheckNetwork.h
-//  QQLottery
+//  BeatPlane
 //
-//  Created by wi on 12-9-4.
-//  Copyright (c) 2012年 海米科技. All rights reserved.
+//  Created by bigqiang on 15/7/23.
+//  Copyright (c) 2015年 barbecue. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

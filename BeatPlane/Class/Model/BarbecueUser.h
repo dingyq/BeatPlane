@@ -7,7 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#define kUserChangedNotify @"kUserChangedNotify"
 
 @interface BarbecueUser : NSObject
+@property (nonatomic, retain) NSString* userId;
+@property (nonatomic, retain) NSString* userName;
+@property (nonatomic, retain) NSString* userSessionKey;
+@property (nonatomic, retain) NSString* userQQ;
+@property (nonatomic, retain) NSString* userLsKey;
+@property (nonatomic, assign) BOOL      isTimeOut;
 
++ (BarbecueUser *)getUserInstance;
++ (void)clearUserInfo;
 @end

@@ -176,13 +176,13 @@
     int  use = tv.tv_usec - m_timeval.tv_usec;  //us
     long ms  = sec * 1000 + use/1000;           //ms
     
-    MTAAppMonitorStat* statObj = [[MTAAppMonitorStat alloc] init];
-    statObj.interface = self.URLString;
-    statObj.consumedMilliseconds = ms;
-    statObj.resultType = MTA_SUCCESS;
-    statObj.returnCode = 0;
-    [MTA reportAppMonitorStat:statObj];
-    [statObj release];
+//    MTAAppMonitorStat* statObj = [[MTAAppMonitorStat alloc] init];
+//    statObj.interface = self.URLString;
+//    statObj.consumedMilliseconds = ms;
+//    statObj.resultType = MTA_SUCCESS;
+//    statObj.returnCode = 0;
+//    [MTA reportAppMonitorStat:statObj];
+//    [statObj release];
 }
 
 - (void)mtaMonitorFail
@@ -194,13 +194,13 @@
     int  use = tv.tv_usec - m_timeval.tv_usec;  //us
     long ms  = sec * 1000 + use/1000;           //ms
     
-    MTAAppMonitorStat* statObj = [[MTAAppMonitorStat alloc] init];
-    statObj.interface = self.URLString;
-    statObj.consumedMilliseconds = ms;
-    statObj.resultType = MTA_FAILURE;
-    statObj.returnCode = 0;
-    [MTA reportAppMonitorStat:statObj];
-    [statObj release];
+//    MTAAppMonitorStat* statObj = [[MTAAppMonitorStat alloc] init];
+//    statObj.interface = self.URLString;
+//    statObj.consumedMilliseconds = ms;
+//    statObj.resultType = MTA_FAILURE;
+//    statObj.returnCode = 0;
+//    [MTA reportAppMonitorStat:statObj];
+//    [statObj release];
 }
 
 - (void)mtaMonitorLogicFail
@@ -212,13 +212,13 @@
     int  use = tv.tv_usec - m_timeval.tv_usec;  //us
     long ms  = sec * 1000 + use/1000;           //ms
     
-    MTAAppMonitorStat* statObj = [[MTAAppMonitorStat alloc] init];
-    statObj.interface = self.URLString;
-    statObj.consumedMilliseconds = ms;
-    statObj.resultType = MTA_LOGIC_FAILURE;
-    statObj.returnCode = 0;
-    [MTA reportAppMonitorStat:statObj];
-    [statObj release];
+//    MTAAppMonitorStat* statObj = [[MTAAppMonitorStat alloc] init];
+//    statObj.interface = self.URLString;
+//    statObj.consumedMilliseconds = ms;
+//    statObj.resultType = MTA_LOGIC_FAILURE;
+//    statObj.returnCode = 0;
+//    [MTA reportAppMonitorStat:statObj];
+//    [statObj release];
 }
 
 @end

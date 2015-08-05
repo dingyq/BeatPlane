@@ -7,16 +7,51 @@
 //
 
 #import "AppDelegate.h"
+#import "BBQNavigationController.h"
+#import "MyBBQViewController.h"
+#import "SettingViewController.h"
 
 @interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
+@synthesize window = _window;
+@synthesize bbqViewController = _bbqViewController;
+@synthesize settingViewController = _settingViewController;
+@synthesize tabBarViewController = _tabBarViewController;
 
+#pragma mark - life cycle
+-(void) dealloc {
+    self.window = nil;
+    self.bbqViewController = nil;
+    self.settingViewController = nil;
+    self.tabBarViewController = nil;
+    
+    [super dealloc];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    UITabBarController *tmpTabController = [[UITabBarController alloc] init];
+    self.tabBarViewController = tmpTabController;
+    [tmpTabController release];
+    self.tabBarViewController.delegate = self;
+    application.statusBarStyle = UIStatusBarStyleLightContent;
+    
+    self.window.rootViewController = self.tabBarViewController;
+
+//    MyBBQViewController *tmpBbqViewController = [[MyBBQViewController alloc] init];
+//    self.bbqViewController = tmpBbqViewController;
+//    [tmpBbqViewController release];
+//    
+//    SettingViewController *tmpSettingViewController = [[SettingViewController alloc] init];
+//    self.settingViewController = tmpSettingViewController;
+//    [tmpSettingViewController release];
+    _tabMap = [[NSMutableDictionary alloc] init];
+    [self configTabControllers];
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
@@ -43,6 +78,89 @@
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
 }
+
+#pragma mark - private methods
+
+- (NSArray*) getTabConfiguration {
+    NSArray* conf = nil;
+    conf = @[@{@"class":@"MyBBQViewController", @"imageNor":@"home_loty_normal.png", @"imageSelect":@"home_loty_selected.png", @"title":@"烤肉大厅", @"associate":@"bbqViewController"}
+             ,@{@"class":@"SettingViewController", @"imageNor":@"home_myloty_normal.png", @"imageSelect":@"home_myloty_selected.png", @"title":@"设置", @"associate":@"settingViewController"}];
+    return conf;
+}
+
+//配置tab Controller中的每个页面
+- (void) configTabControllers {
+    NSMutableArray *vcs = [[NSMutableArray alloc] init];
+    NSArray *conf = [self getTabConfiguration];
+    int idx = 0;
+    NSArray* org_vcs = [self.tabBarViewController viewControllers];
+    
+    for (NSDictionary* dict in conf) {
+        NSString* klassName = [dict objectForKey:@"class"];
+        NSString* titleName = [dict objectForKey:@"title"];
+        NSString* imageName = [dict objectForKey:@"imageNor"];
+//        NSString* imageSelName = [dict objectForKey:@"imageSelect"];
+        Class klass = NSClassFromString(klassName);
+        
+        if (klass == NULL) {
+            idx = (idx == 0) ? 0 : idx - 1;
+            continue;
+        }
+        
+        //先从原来的vcs中获取，看看是否有已经就续的同类vc
+        BOOL found = NO;
+//        int org_counts = [org_vcs count];
+        NSInteger org_counts = [org_vcs count];
+        UIViewController* org_vc = nil;
+        for (int i = 0; i < org_counts; i++) {
+            org_vc = [org_vcs objectAtIndex:i];
+            BOOL exg = NO;
+            if ([org_vc isKindOfClass:[UINavigationController class]]) {
+                org_vc = [[(UINavigationController*)org_vc viewControllers] objectAtIndex:0];
+                exg = YES;
+            }
+            if ([org_vc isKindOfClass:klass]) {
+                if(exg) {
+                    org_vc = org_vc.navigationController;
+                }
+                found = YES;
+                break;
+            }
+        }
+        
+        if (found) { //found
+            [vcs addObject:org_vc];
+        }else{
+            UIViewController* vc = [[klass alloc] init];
+            
+            //config the vc if the config block exist
+//            void (^vc_config_block)(UIViewController* controller) = [dict objectForKey:@"config_block"];
+//            if (vc_config_block != nil) {
+//                vc_config_block(vc);
+//                [vc_config_block release];
+//            }
+            
+            UINavigationController *navigationController = [[BBQNavigationController alloc] initWithRootViewController:vc];
+            navigationController.tabBarItem.title = titleName;
+            navigationController.tabBarItem.image = [UIImage imageNamed:imageName];
+            //            navigationController.tabBarItem.selectedImage = [UIImage imageNamed:imageSelName]; //暂时不用选中态
+            [vcs addObject:navigationController];
+            [navigationController release];
+            [vc release];
+            
+            NSString* ascName = [dict objectForKey:@"associate"];
+            if (ascName != nil) {
+                [self setValue:vc forKey:ascName];
+            }
+        }
+        [_tabMap setObject:[NSNumber numberWithInt:idx] forKey:klassName];
+        
+        idx ++;
+    }
+    
+    self.tabBarViewController.viewControllers = vcs;
+}
+
 
 #pragma mark - Core Data stack
 

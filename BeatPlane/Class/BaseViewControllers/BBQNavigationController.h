@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BBQNavigationController : UINavigationController
+@interface BBQNavigationController : UINavigationController<UIGestureRecognizerDelegate,UINavigationControllerDelegate>
 
 @end
